@@ -5,3 +5,22 @@ expertMode = true
 [nix]
 channel = "stable-25_05"
 packages = ["glibcLocales"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[[ports]]
+localPort = 3001
+externalPort = 3001
+
+[workflows]
+
+[[workflows.workflow]]
+name = "front end "
+mode = "sequential"
+author = 36988660
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm run dev"
