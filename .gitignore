@@ -43,3 +43,26 @@ Thumbs.db
 *.xlsx
 *.db
 *.sqlite
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+config.json
+secrets.json
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next/
+out/
+.cache/
+
+# Frontend build artifacts
+frontend/.next/
+frontend/out/
+frontend/node_modules/
