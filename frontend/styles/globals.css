@@ -22,135 +22,31 @@ a {
   text-decoration: none;
 }
 
-/* App Layout with Sidebar */
-.app-container {
-  display: flex;
-  min-height: 100vh;
+/* App Layout with Sidebar - handled by AnimatedSidebar component */
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-/* Sidebar Styles */
-.sidebar {
-  width: 260px;
+::-webkit-scrollbar-track {
   background: #0f1629;
-  border-right: 1px solid #1e222d;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  height: 100vh;
-  z-index: 100;
 }
 
-.sidebar-header {
-  padding: 30px 24px;
-  border-bottom: 1px solid #1e222d;
-}
-
-.sidebar-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 4px;
-}
-
-.sidebar-subtitle {
-  font-size: 13px;
-  color: #6b7280;
-  font-weight: 400;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 20px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sidebar-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  color: #9ca3af;
-  font-size: 15px;
-  font-weight: 500;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.sidebar-link:hover {
-  background: #1a1f35;
-  color: #e0e0e0;
-}
-
-.sidebar-link.active {
+::-webkit-scrollbar-thumb {
   background: #2962ff;
-  color: #ffffff;
+  border-radius: 4px;
 }
 
-.sidebar-icon {
-  font-size: 20px;
-}
-
-.sidebar-text {
-  flex: 1;
-}
-
-.sidebar-footer {
-  padding: 20px 24px;
-  border-top: 1px solid #1e222d;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sidebar-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.info-label {
-  font-size: 11px;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-}
-
-.info-value {
-  font-size: 14px;
-  color: #e0e0e0;
-  font-weight: 600;
-}
-
-/* Main Content */
-.main-content {
-  flex: 1;
-  margin-left: 0;
-  padding: 0;
-  min-height: 100vh;
-  transition: margin-left 0.3s ease;
-}
-
-@media (min-width: 768px) {
-  .main-content {
-    margin-left: 70px;
-  }
-}
-
-@media (max-width: 767px) {
-  .main-content {
-    margin-top: 64px;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #1e53e5;
 }
 
 /* Page Container */
 .page-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 30px;
+  width: 100%;
+  height: 100%;
 }
 
 .page-header {
@@ -469,14 +365,6 @@ a {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-
   .hero-title {
     font-size: 36px;
   }

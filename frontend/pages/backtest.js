@@ -131,7 +131,7 @@ export default function Backtest() {
           <div className="empty-state">
             <div className="empty-icon">⚡</div>
             <h3>No Backtest Run</h3>
-            <p>Click "Run Backtest" to test the strategy</p>
+            <p>Click &quot;Run Backtest&quot; to test the strategy</p>
           </div>
         )}
       </div>

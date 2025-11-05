@@ -1,10 +1,10 @@
 import '@/styles/globals.css'
-import Layout from '@/components/Layout'
+import { AnimatedSidebarDemo } from '@/components/AnimatedSidebar'
 
 export default function App({ Component, pageProps }) {
   return (
-    <Layout>
+    <AnimatedSidebarDemo>
       <Component {...pageProps} />
-    </Layout>
+    </AnimatedSidebarDemo>
   )
 }

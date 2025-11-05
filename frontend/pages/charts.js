@@ -1,20 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
-// Dynamically import charts to avoid SSR issues
+// Dynamically import chart to avoid SSR issues
 const PriceChart = dynamic(() => import('@/components/PriceChart'), {
-  ssr: false,
-});
-const DeltaChart = dynamic(() => import('@/components/DeltaChart'), {
   ssr: false,
 });
 
 export default function Charts() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [priceData, setPriceData] = useState(null);
   const [deltaData, setDeltaData] = useState(null);
+
+  useEffect(() => {
+    loadChartData();
+  }, []);
 
   const loadChartData = async () => {
     setLoading(true);
@@ -29,8 +30,12 @@ export default function Charts() {
 
       const data = await response.json();
 
-      setPriceData(data.price_data);
-      setDeltaData(data.delta_data);
+      setPriceData({
+        candlestick: data.candlestickData,
+        volume: data.volumeData,
+        stats: data.stats
+      });
+      setDeltaData(data.deltaData);
 
     } catch (err) {
       setError(err.message);
@@ -48,22 +53,6 @@ export default function Charts() {
       </Head>
 
       <div className="page-container">
-        <div className="page-header">
-          <div>
-            <h1>Trading Charts</h1>
-            <p className="page-description">
-              Visualize Gold futures price action and cumulative volume delta
-            </p>
-          </div>
-          <button
-            className="btn"
-            onClick={loadChartData}
-            disabled={loading}
-          >
-            {loading ? 'Loading...' : 'Load Data'}
-          </button>
-        </div>
-
         {error && (
           <div className="error">
             <strong>Error:</strong> {error}
@@ -72,30 +61,39 @@ export default function Charts() {
 
         {loading && (
           <div className="loading">
-            Loading chart data...
+            Loading Gold futures chart data (48,895 bars)...
           </div>
         )}
 
         {!loading && priceData && (
-          <div className="charts-grid">
-            <div className="chart-section">
-              <h2>Price Chart</h2>
-              <PriceChart data={priceData} signals={[]} />
+          <>
+            <div className="metrics-section" style={{ marginBottom: '24px' }}>
+              <h2>Dataset Statistics</h2>
+              <div className="metrics-grid">
+                <div className="metric">
+                  <div className="metric-label">Total Bars</div>
+                  <div className="metric-value">{priceData.stats?.totalBars?.toLocaleString() || 'N/A'}</div>
+                </div>
+                <div className="metric">
+                  <div className="metric-label">Start Date</div>
+                  <div className="metric-value">
+                    {priceData.stats?.startDate ? new Date(priceData.stats.startDate * 1000).toLocaleDateString() : 'N/A'}
+                  </div>
+                </div>
+                <div className="metric">
+                  <div className="metric-label">End Date</div>
+                  <div className="metric-value">
+                    {priceData.stats?.endDate ? new Date(priceData.stats.endDate * 1000).toLocaleDateString() : 'N/A'}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="chart-section">
-              <h2>Cumulative Delta</h2>
-              <DeltaChart data={deltaData} />
+              <h2>📊 Gold Futures (GC) - 1-Minute Chart with Cumulative Delta</h2>
+              <PriceChart data={priceData} deltaData={deltaData} />
             </div>
-          </div>
-        )}
-
-        {!loading && !priceData && !error && (
-          <div className="empty-state">
-            <div className="empty-icon">📊</div>
-            <h3>No Data Loaded</h3>
-            <p>Click "Load Data" to visualize Gold futures charts</p>
-          </div>
+          </>
         )}
       </div>
     </>

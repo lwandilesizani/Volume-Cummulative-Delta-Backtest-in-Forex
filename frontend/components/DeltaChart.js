@@ -4,7 +4,8 @@ import { createChart } from 'lightweight-charts';
 export default function DeltaChart({ data }) {
   const chartContainerRef = useRef();
   const chartRef = useRef();
-  const seriesRef = useRef();
+  const deltaSeriesRef = useRef();
+  const cumulativeSeriesRef = useRef();
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -34,17 +35,29 @@ export default function DeltaChart({ data }) {
       },
     });
 
-    // Add histogram series for cumulative delta
-    const series = chart.addHistogramSeries({
-      color: '#26a69a',
+    // Add histogram series for instant delta
+    const deltaSeries = chart.addHistogramSeries({
       priceFormat: {
         type: 'volume',
       },
       priceScaleId: '',
+      scaleMargins: {
+        top: 0.1,
+        bottom: 0.5,
+      },
+    });
+
+    // Add line series for cumulative delta
+    const cumulativeSeries = chart.addLineSeries({
+      color: '#2962ff',
+      lineWidth: 2,
+      priceScaleId: 'left',
+      title: 'Cumulative Delta',
     });
 
     chartRef.current = chart;
-    seriesRef.current = series;
+    deltaSeriesRef.current = deltaSeries;
+    cumulativeSeriesRef.current = cumulativeSeries;
 
     // Handle resize
     const handleResize = () => {
@@ -64,18 +77,26 @@ export default function DeltaChart({ data }) {
   }, []);
 
   useEffect(() => {
-    if (!seriesRef.current || !data) return;
+    if (!deltaSeriesRef.current || !cumulativeSeriesRef.current || !data) return;
 
-    // Convert data to lightweight-charts format
-    const formattedData = data.map(item => ({
+    // Format instant delta data (histogram) - using absolute value for histogram height
+    // Color indicates direction: green = positive delta (more buy volume), red = negative (more sell volume)
+    const deltaData = data.map(item => ({
       time: item.time,
-      value: item.cumulative_delta,
-      color: item.cumulative_delta >= 0 ? '#26a69a' : '#ef5350',
+      value: Math.abs(item.value), // Histogram requires positive values
+      color: item.value >= 0 ? '#26a69a' : '#ef5350',
     }));
 
-    seriesRef.current.setData(formattedData);
+    // Format cumulative delta data (line)
+    const cumulativeData = data.map(item => ({
+      time: item.time,
+      value: item.cumulativeDelta,
+    }));
+
+    deltaSeriesRef.current.setData(deltaData);
+    cumulativeSeriesRef.current.setData(cumulativeData);
     chartRef.current.timeScale().fitContent();
   }, [data]);
 
-  return <div ref={chartContainerRef} className="chart-container" />;
+  return <div ref={chartContainerRef} className="chart-container" style={{ height: '400px' }} />;
 }
